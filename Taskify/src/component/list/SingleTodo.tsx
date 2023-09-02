@@ -17,6 +17,40 @@ function SingleTodo({ todo, todos, setTodos, index }: TodoProps) {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.toDo);
 
+  let getFormattedDate = (): string => {
+    let date: string = new Date(todo.id).toString();
+    const dateObject = new Date(date);
+
+    const day = String(dateObject.getDate()).padStart(2, "0");
+    const month = date && date.split(" ")[1];
+    const year = dateObject.getFullYear();
+
+    return `${day} ${month} ${year}`;
+  };
+
+  let renderIsDone = () => {
+    return (
+      <div>
+        <s
+          className={`${styles.todos__single__text}`}
+          style={{ color: "green" }}
+        >
+          {todo.toDo}
+        </s>
+        <div>Completed Time: {getFormattedDate()}</div>
+      </div>
+    );
+  };
+
+  let renderIsNotDone = () => {
+    return (
+      <div>
+        <div className={`${styles.todos__single__text}`}>{todo.toDo}</div>
+        <div> Created Date: {getFormattedDate()}</div>
+      </div>
+    );
+  };
+
   return (
     <Draggable draggableId={todo.id.toString()} index={index}>
       {(provided, snapshot) => (
@@ -41,20 +75,7 @@ function SingleTodo({ todo, todos, setTodos, index }: TodoProps) {
               />
             </>
           ) : (
-            <>
-              {todo.isDone ? (
-                <s
-                  className={`${styles.todos__single__text}`}
-                  style={{ color: "green" }}
-                >
-                  {todo.toDo}
-                </s>
-              ) : (
-                <span className={`${styles.todos__single__text}`}>
-                  {todo.toDo}
-                </span>
-              )}
-            </>
+            <>{todo.isDone ? renderIsDone() : renderIsNotDone()}</>
           )}
 
           <div className={`${styles.iconsSpacing}`}>
